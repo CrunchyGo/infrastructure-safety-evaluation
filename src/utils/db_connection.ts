@@ -5,6 +5,8 @@ interface MongooseCache {
   promise: Promise<mongoose.Connection> | null;
 }
 
+const MONGOOSE_CONNECTION_STRING = process.env.NEXT_PUBLIC_MONGOOSE_CONNECTION_STRING;
+
 let cached: MongooseCache = (global as any).mongoose || { conn: null, promise: null };
 
 export async function connectDB(): Promise<mongoose.Connection> {
@@ -12,7 +14,7 @@ export async function connectDB(): Promise<mongoose.Connection> {
 
   if (!cached.promise) {
     cached.promise = mongoose
-      .connect("mongodb+srv://crunchygo7_db_user:AzQ48iQlzzADm7O3@cluster0.vdqqili.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+      .connect(MONGOOSE_CONNECTION_STRING!)
       .then((mongoose) => mongoose.connection);
   }
 

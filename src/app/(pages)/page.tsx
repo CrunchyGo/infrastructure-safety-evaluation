@@ -54,7 +54,6 @@ const Home = () => {
   };
 
   const onSubmit = (data: HomeFormData) => {
-    console.log('data', data);
     const formData = new FormData();
 
     const ROOM_IMAGE_FIELDS = [
