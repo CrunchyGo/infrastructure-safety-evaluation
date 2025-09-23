@@ -111,22 +111,23 @@ export type RoomFormData = yup.InferType<typeof RoomSchema>;
 
 // Image field labels for UI
 export const IMAGE_FIELD_LABELS = {
-  interiorFrontWall: 'Interior Front Wall (अंदर का सामने का दीवार)',
-  interiorRightWall: 'Interior Right Wall (अंदर का दायां दीवार)',
-  interiorBackWall: 'Interior Back Wall (अंदर का पिछला दीवार)',
-  interiorLeftWall: 'Interior Left Wall (अंदर का बायां दीवार)',
-  interiorCeiling: 'Interior Ceiling (अंदर की छत)',
-  interiorFloor: 'Interior Floor (अंदर का फर्श)',
-  exteriorBackWall: 'Exterior Back Wall (बाहर का पिछला दीवार)',
-  exteriorLeftWall: 'Exterior Left Wall (बाहर का बायां दीवार)',
-  exteriorFrontWall: 'Exterior Front Wall (बाहर का सामने का दीवार)',
-  exteriorRightWall: 'Exterior Right Wall (बाहर का दायां दीवार)',
-  surroundingAreaOfBackwall: 'Surrounding Area of Backwall (पिछले दीवार के आसपास का क्षेत्र)',
-  surroundingAreaOfLeftwall: 'Surrounding Area of Leftwall (बाएं दीवार के आसपास का क्षेत्र)',
-  surroundingAreaOfFrontwall: 'Surrounding Area of Frontwall (सामने के दीवार के आसपास का क्षेत्र)',
-  surroundingAreaOfRightwall: 'Surrounding Area of Rightwall (दाएं दीवार के आसपास का क्षेत्र)',
-  roof: 'Roof (छत)',
+  interiorFrontWall: 'Interior Front Wall (भीतरी सामने की दीवार)',
+  interiorRightWall: 'Interior Right Wall (भीतरी दायीं दीवार)',
+  interiorBackWall: 'Interior Back Wall (भीतरी पिछली दीवार)',
+  interiorLeftWall: 'Interior Left Wall (भीतरी बायीं दीवार)',
+  interiorCeiling: 'Interior Ceiling (भीतरी छत)',
+  interiorFloor: 'Interior Floor (भीतरी फ़र्श)',
+  exteriorBackWall: 'Exterior Back Wall (बाहरी पिछली दीवार)',
+  exteriorLeftWall: 'Exterior Left Wall (बाहरी बायीं दीवार)',
+  exteriorFrontWall: 'Exterior Front Wall (बाहरी सामने की दीवार)',
+  exteriorRightWall: 'Exterior Right Wall (बाहरी दायीं दीवार)',
+  surroundingAreaOfBackwall: 'Surrounding Area of Backwall (पिछली दीवार की नींव के आसपास का क्षेत्र)',
+  surroundingAreaOfLeftwall: 'Surrounding Area of Leftwall (बायीं दीवार की नींव के आसपास का क्षेत्र)',
+  surroundingAreaOfFrontwall: 'Surrounding Area of Frontwall (सामने की दीवार की नींव के आसपास का क्षेत्र)',
+  surroundingAreaOfRightwall: 'Surrounding Area of Rightwall (दायीं दीवार की नींव के आसपास का क्षेत्र)',
+  roof: 'Roof (ऊपरी छत)',
 } as const;
+
 
 // Required fields for UI indicators
 export const REQUIRED_FIELDS = [
