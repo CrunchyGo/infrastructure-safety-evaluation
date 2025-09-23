@@ -133,7 +133,7 @@ const Home = () => {
                 <User className="h-5 w-5" />
                 <div className="text-right">
                   <p className="font-medium">{user?.udiseCode || 'Inspector'}</p>
-                  <p className="text-sm text-white/80">UDISE: {user?.udiseCode}</p>
+                  <p className="text-sm text-white/80">User ID: {user?.udiseCode}</p>
                 </div>
               </div>
               <Button

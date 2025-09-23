@@ -19,7 +19,6 @@ const Login = () => {
 
   const { mutate: loginMutation, isPending: isLoginPending } = useLogin({
     onSuccess: (data) => {
-      console.log('data', data);
       login(data.data.data.user.udiseCode);
       toast.success('Login Successful');
       router.push('/');
@@ -71,12 +70,12 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="udiseCode" className="text-sm font-medium text-foreground">
-                  UDISE Code (यूडीआईएसई कोड)
+                  User ID (यूजर आईडी)
                 </Label>
                 <Input
                   id="udiseCode"
                   type="text"
-                  placeholder="Enter 6+ digit UDISE code"
+                  placeholder="Enter 6+ digit User ID"
                   {...register('udiseCode')}
                   className={errors.udiseCode ? 'border-destructive' : ''}
                   disabled={isLoginPending}
