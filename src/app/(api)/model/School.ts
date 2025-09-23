@@ -19,6 +19,7 @@ export interface IHomeForm extends Document {
   udiseCode: string;
   schoolName: string;
   boardFile?: string;
+  surroundingArea?: string[];
   state: string;
   district: string;
   block: string;
@@ -55,6 +56,7 @@ const HomeFormSchema: Schema<IHomeForm> = new Schema(
     },
     schoolName: { type: String, required: true },
     boardFile: { type: String },
+    surroundingArea: [{ type: String }],
     state: { type: String, required: true },
     district: { type: String, required: true },
     block: { type: String, required: true },

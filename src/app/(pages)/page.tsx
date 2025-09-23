@@ -25,7 +25,8 @@ const Home = () => {
     resolver: yupResolver(HomeFormSchema),
     defaultValues: {
       schoolName: '',
-      boardFile: null as any,
+      boardFile: [],
+      surroundingArea: [],
       state: '',
       district: '',
       block: '',
@@ -78,13 +79,24 @@ const Home = () => {
 
     // ✅ Single file
     if (data.boardFile?.[0]) {
-      console.log('data.boardFile', data.boardFile);
+
       formData.append("boardFile", data.boardFile[0]);
+    }
+
+    
+    const surroundingArea = data.surroundingArea as any[];
+    if (surroundingArea && surroundingArea.length > 0) {
+
+      for (const file of surroundingArea) {
+        if (file) {
+          formData.append("surroundingArea", file);
+        }
+      }
     }
 
     data.rooms.forEach((room, i) => {
       for (const field of ROOM_IMAGE_FIELDS) {
-        if (room[field].length > 0) {
+        if (room[field] && room[field].length > 0) {
           for (const file of room[field]) {
             if (file) {
               formData.append(`rooms[${i}][${field}]`, file);
@@ -228,6 +240,28 @@ const Home = () => {
                             files={field.value}
                             onChange={field.onChange}
                             multiple={false}
+                            accept="image/jpeg,image/jpg,image/png"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="surroundingArea"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <ImageUploader
+                            label="Surrounding Area"
+                            name="surroundingArea"
+                            files={field.value}
+                            onChange={field.onChange}
+                            multiple={true}
                             accept="image/jpeg,image/jpg,image/png"
                           />
                         </FormControl>

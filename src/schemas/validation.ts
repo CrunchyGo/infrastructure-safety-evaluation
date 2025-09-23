@@ -13,7 +13,7 @@ export const LoginSchema = yup.object({
     .min(6, 'Password must be at least 6 characters'),
 });
 
-// File validation helper
+// File validation helper for required fields
 const fileValidation = yup
   .mixed()
   .required('This field is required')
@@ -23,6 +23,19 @@ const fileValidation = yup
   })
   .test('fileType', 'Only JPG, PNG files are allowed', (value: any) => {
     if (!value || !value.length) return false;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    return Array.from(value).every((file: any) => allowedTypes.includes(file.type));
+  });
+
+// Optional file validation helper for exterior fields
+const optionalFileValidation = yup
+  .mixed()
+  .test('fileSize', 'File size must be less than 5MB', (value: any) => {
+    if (!value || !value.length) return true; // Allow empty
+    return Array.from(value).every((file: any) => file.size <= 5242880); // 5MB
+  })
+  .test('fileType', 'Only JPG, PNG files are allowed', (value: any) => {
+    if (!value || !value.length) return true; // Allow empty
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     return Array.from(value).every((file: any) => allowedTypes.includes(file.type));
   });
@@ -41,33 +54,44 @@ const singleFileValidation = yup
     return allowedTypes.includes(value[0]?.type);
   });
 
-// Room image fields
-const roomImageFields = [
+// Interior room image fields (required)
+const interiorImageFields = [
   'interiorCeiling',
   'interiorFrontWall',
   'interiorRightWall',
   'interiorBackWall',
   'interiorLeftWall',
   'interiorFloor',
+  'roof'
+];
+
+// Exterior room image fields (optional)
+const exteriorImageFields = [
   'exteriorFrontWall',
   'exteriorRightWall',
   'exteriorLeftWall',
-  'exteriorBackWall',
-  'roof',
+  'exteriorBackWall'
 ];
 
 // Room Schema
-export const RoomSchema = yup.object(
-  roomImageFields.reduce((acc, field) => {
+export const RoomSchema = yup.object({
+  // Interior fields (required)
+  ...interiorImageFields.reduce((acc, field) => {
     acc[field] = fileValidation;
     return acc;
-  }, {} as Record<string, any>)
-);
+  }, {} as Record<string, any>),
+  // Exterior fields (optional)
+  ...exteriorImageFields.reduce((acc, field) => {
+    acc[field] = optionalFileValidation;
+    return acc;
+  }, {} as Record<string, any>),
+});
 
 // Home Form Schema
 export const HomeFormSchema = yup.object({
   schoolName: yup.string().required('School name is required'),
   boardFile: singleFileValidation,
+  surroundingArea: fileValidation,
   state: yup.string().required('State name is required'),
   district: yup.string().required('District name is required'),
   block: yup.string().required('Block name is required'),
