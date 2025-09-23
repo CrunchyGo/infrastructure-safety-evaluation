@@ -14,7 +14,6 @@ export async function POST(req: Request) {
             // Extract simple fields
             const schoolName = formData.get("schoolName") as string;
             const boardFile = formData.get("boardFile") as File | null;
-            const surroundingAreaFiles = formData.getAll("surroundingArea") as File[];
             const state = formData.get("state") as string;
             const district = formData.get("district") as string;
             const block = formData.get("block") as string;
@@ -52,18 +51,6 @@ export async function POST(req: Request) {
                 boardFileUrl = await uploadToAzure(buffer, boardFile.name);
             }
 
-            // ✅ Upload surrounding area files
-            let surroundingAreaUrls: string[] = [];
-            if (surroundingAreaFiles.length > 0) {
-                const urls = await Promise.all(
-                    surroundingAreaFiles.map(async (file) => {
-                        const buffer = Buffer.from(await file.arrayBuffer());
-                        return uploadToAzure(buffer, file.name);
-                    })
-                );
-                surroundingAreaUrls = urls;
-            }
-
             // ✅ Handle room image fields
             const roomImageFields = [
                 "interiorCeiling",
@@ -76,6 +63,10 @@ export async function POST(req: Request) {
                 "exteriorRightWall",
                 "exteriorLeftWall",
                 "exteriorBackWall",
+                "surroundingAreaOfBackwall",
+                "surroundingAreaOfLeftwall",
+                "surroundingAreaOfFrontwall",
+                "surroundingAreaOfRightwall",
                 "roof",
             ];
 
@@ -114,7 +105,6 @@ export async function POST(req: Request) {
             const newForm = await HomeForm.create({
                 schoolName,
                 boardFile: boardFileUrl,
-                surroundingArea: surroundingAreaUrls,
                 state,
                 district,
                 block,

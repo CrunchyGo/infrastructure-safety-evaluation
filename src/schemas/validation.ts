@@ -56,11 +56,11 @@ const singleFileValidation = yup
 
 // Interior room image fields (required)
 const interiorImageFields = [
-  'interiorCeiling',
   'interiorFrontWall',
   'interiorRightWall',
   'interiorBackWall',
   'interiorLeftWall',
+  'interiorCeiling',
   'interiorFloor',
   'roof'
 ];
@@ -70,7 +70,11 @@ const exteriorImageFields = [
   'exteriorFrontWall',
   'exteriorRightWall',
   'exteriorLeftWall',
-  'exteriorBackWall'
+  'exteriorBackWall',
+  'surroundingAreaOfBackwall',
+  'surroundingAreaOfLeftwall',
+  'surroundingAreaOfFrontwall',
+  'surroundingAreaOfRightwall'
 ];
 
 // Room Schema
@@ -91,7 +95,6 @@ export const RoomSchema = yup.object({
 export const HomeFormSchema = yup.object({
   schoolName: yup.string().required('School name is required'),
   boardFile: singleFileValidation,
-  surroundingArea: fileValidation,
   state: yup.string().required('State name is required'),
   district: yup.string().required('District name is required'),
   block: yup.string().required('Block name is required'),
@@ -108,17 +111,21 @@ export type RoomFormData = yup.InferType<typeof RoomSchema>;
 
 // Image field labels for UI
 export const IMAGE_FIELD_LABELS = {
-  interiorCeiling: 'Interior Ceiling',
-  interiorFrontWall: 'Interior Front Wall',
-  interiorRightWall: 'Interior Right Wall',
-  interiorBackWall: 'Interior Back Wall',
-  interiorLeftWall: 'Interior Left Wall',
-  interiorFloor: 'Interior Floor',
-  exteriorFrontWall: 'Exterior Front Wall',
-  exteriorRightWall: 'Exterior Right Wall',
-  exteriorLeftWall: 'Exterior Left Wall',
-  exteriorBackWall: 'Exterior Back Wall',
-  roof: 'Roof',
+  interiorFrontWall: 'Interior Front Wall (अंदर का सामने का दीवार)',
+  interiorRightWall: 'Interior Right Wall (अंदर का दायां दीवार)',
+  interiorBackWall: 'Interior Back Wall (अंदर का पिछला दीवार)',
+  interiorLeftWall: 'Interior Left Wall (अंदर का बायां दीवार)',
+  interiorCeiling: 'Interior Ceiling (अंदर की छत)',
+  interiorFloor: 'Interior Floor (अंदर का फर्श)',
+  exteriorBackWall: 'Exterior Back Wall (बाहर का पिछला दीवार)',
+  exteriorLeftWall: 'Exterior Left Wall (बाहर का बायां दीवार)',
+  exteriorFrontWall: 'Exterior Front Wall (बाहर का सामने का दीवार)',
+  exteriorRightWall: 'Exterior Right Wall (बाहर का दायां दीवार)',
+  surroundingAreaOfBackwall: 'Surrounding Area of Backwall (पिछले दीवार के आसपास का क्षेत्र)',
+  surroundingAreaOfLeftwall: 'Surrounding Area of Leftwall (बाएं दीवार के आसपास का क्षेत्र)',
+  surroundingAreaOfFrontwall: 'Surrounding Area of Frontwall (सामने के दीवार के आसपास का क्षेत्र)',
+  surroundingAreaOfRightwall: 'Surrounding Area of Rightwall (दाएं दीवार के आसपास का क्षेत्र)',
+  roof: 'Roof (छत)',
 } as const;
 
 // Required fields for UI indicators

@@ -12,6 +12,10 @@ export interface IRoom extends Document {
   exteriorRightWall?: string[];
   exteriorLeftWall?: string[];
   exteriorBackWall?: string[];
+  surroundingAreaOfBackwall?: string[];
+  surroundingAreaOfLeftwall?: string[];
+  surroundingAreaOfFrontwall?: string[];
+  surroundingAreaOfRightwall?: string[];
   roof?: string[];
 }
 
@@ -19,7 +23,6 @@ export interface IHomeForm extends Document {
   udiseCode: string;
   schoolName: string;
   boardFile?: string;
-  surroundingArea?: string[];
   state: string;
   district: string;
   block: string;
@@ -41,6 +44,10 @@ const RoomSchema: Schema<IRoom> = new Schema(
     exteriorRightWall: [{ type: String }],
     exteriorLeftWall: [{ type: String }],
     exteriorBackWall: [{ type: String }],
+    surroundingAreaOfBackwall: [{ type: String }],
+    surroundingAreaOfLeftwall: [{ type: String }],
+    surroundingAreaOfFrontwall: [{ type: String }],
+    surroundingAreaOfRightwall: [{ type: String }],
     roof: [{ type: String }],
   },
   { _id: false }
@@ -56,7 +63,6 @@ const HomeFormSchema: Schema<IHomeForm> = new Schema(
     },
     schoolName: { type: String, required: true },
     boardFile: { type: String },
-    surroundingArea: [{ type: String }],
     state: { type: String, required: true },
     district: { type: String, required: true },
     block: { type: String, required: true },

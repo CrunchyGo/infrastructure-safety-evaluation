@@ -71,7 +71,7 @@ const Login = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="udiseCode" className="text-sm font-medium text-foreground">
-                  UDISE Code
+                  UDISE Code (यूडीआईएसई कोड)
                 </Label>
                 <Input
                   id="udiseCode"
@@ -88,7 +88,7 @@ const Login = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                  Password
+                  Password (पासवर्ड)
                 </Label>
                 <Input
                   id="password"

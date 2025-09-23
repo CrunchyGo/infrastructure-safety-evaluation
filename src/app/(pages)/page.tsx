@@ -20,13 +20,11 @@ const Home = () => {
   const { user, logout } = useAuthStore();
   const router = useRouter();
 
-
   const form = useForm<HomeFormData>({
     resolver: yupResolver(HomeFormSchema),
     defaultValues: {
       schoolName: '',
       boardFile: [],
-      surroundingArea: [],
       state: '',
       district: '',
       block: '',
@@ -68,6 +66,10 @@ const Home = () => {
       "exteriorRightWall",
       "exteriorLeftWall",
       "exteriorBackWall",
+      "surroundingAreaOfBackwall",
+      "surroundingAreaOfLeftwall",
+      "surroundingAreaOfFrontwall",
+      "surroundingAreaOfRightwall",
       "roof",
     ];
 
@@ -81,17 +83,6 @@ const Home = () => {
     if (data.boardFile?.[0]) {
 
       formData.append("boardFile", data.boardFile[0]);
-    }
-
-    
-    const surroundingArea = data.surroundingArea as any[];
-    if (surroundingArea && surroundingArea.length > 0) {
-
-      for (const file of surroundingArea) {
-        if (file) {
-          formData.append("surroundingArea", file);
-        }
-      }
     }
 
     data.rooms.forEach((room, i) => {
@@ -175,7 +166,7 @@ const Home = () => {
                     name="schoolName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>School Name <span className="text-red-500 ml-1">*</span></FormLabel>
+                        <FormLabel>School Name (विद्यालय का नाम) <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter school name" {...field} />
                         </FormControl>
@@ -189,7 +180,7 @@ const Home = () => {
                     name="state"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>State Name <span className="text-red-500 ml-1">*</span></FormLabel>
+                        <FormLabel>State Name (राज्य का नाम) <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter state name" {...field} />
                         </FormControl>
@@ -203,7 +194,7 @@ const Home = () => {
                     name="district"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>District Name <span className="text-red-500 ml-1">*</span></FormLabel>
+                        <FormLabel>District Name (जिले का नाम) <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter district name" {...field} />
                         </FormControl>
@@ -217,7 +208,7 @@ const Home = () => {
                     name="block"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Block Name <span className="text-red-500 ml-1">*</span></FormLabel>
+                        <FormLabel>Block Name (ब्लॉक का नाम) <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter block name" {...field} />
                         </FormControl>
@@ -235,34 +226,11 @@ const Home = () => {
                       <FormItem>
                         <FormControl>
                           <ImageUploader
-                            label="Board Document"
+                            label="School Board (विद्यालय बोर्ड)"
                             name="boardFile"
                             files={field.value}
                             onChange={field.onChange}
                             multiple={false}
-                            accept="image/jpeg,image/jpg,image/png"
-                            required={true}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <FormField
-                    control={form.control}
-                    name="surroundingArea"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <ImageUploader
-                            label="Surrounding Area"
-                            name="surroundingArea"
-                            files={field.value}
-                            onChange={field.onChange}
-                            multiple={true}
                             accept="image/jpeg,image/jpg,image/png"
                             required={true}
                           />
