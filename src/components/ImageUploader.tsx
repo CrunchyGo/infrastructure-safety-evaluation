@@ -11,6 +11,7 @@ interface ImageUploaderProps {
   error?: string;
   multiple?: boolean;
   accept?: string;
+  required?: boolean;
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -21,6 +22,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   error,
   multiple = true,
   accept = 'image/jpeg,image/jpg,image/png',
+  required = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -99,7 +101,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   return (
     <div className="space-y-2">
       <Label htmlFor={name} className="text-sm font-medium text-foreground">
-        {label} {multiple && '(Multiple files allowed)'}
+        {label} {required && <span className="text-red-500 ml-1">*</span>} {multiple && '(Multiple files allowed)'}
       </Label>
 
       <div

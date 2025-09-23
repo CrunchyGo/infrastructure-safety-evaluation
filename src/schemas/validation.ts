@@ -121,4 +121,15 @@ export const IMAGE_FIELD_LABELS = {
   roof: 'Roof',
 } as const;
 
+// Required fields for UI indicators
+export const REQUIRED_FIELDS = [
+  'interiorCeiling',
+  'interiorFrontWall',
+  'interiorRightWall',
+  'interiorBackWall',
+  'interiorLeftWall',
+  'interiorFloor',
+  'roof'
+] as const;
+
 export const IMAGE_FIELDS = Object.keys(IMAGE_FIELD_LABELS) as Array<keyof typeof IMAGE_FIELD_LABELS>;

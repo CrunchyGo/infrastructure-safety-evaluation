@@ -175,7 +175,7 @@ const Home = () => {
                     name="schoolName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>School Name</FormLabel>
+                        <FormLabel>School Name <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter school name" {...field} />
                         </FormControl>
@@ -189,7 +189,7 @@ const Home = () => {
                     name="state"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>State Name</FormLabel>
+                        <FormLabel>State Name <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter state name" {...field} />
                         </FormControl>
@@ -203,7 +203,7 @@ const Home = () => {
                     name="district"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>District Name</FormLabel>
+                        <FormLabel>District Name <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter district name" {...field} />
                         </FormControl>
@@ -217,7 +217,7 @@ const Home = () => {
                     name="block"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Block Name</FormLabel>
+                        <FormLabel>Block Name <span className="text-red-500 ml-1">*</span></FormLabel>
                         <FormControl>
                           <Input placeholder="Enter block name" {...field} />
                         </FormControl>
@@ -241,6 +241,7 @@ const Home = () => {
                             onChange={field.onChange}
                             multiple={false}
                             accept="image/jpeg,image/jpg,image/png"
+                            required={true}
                           />
                         </FormControl>
                         <FormMessage />
@@ -263,6 +264,7 @@ const Home = () => {
                             onChange={field.onChange}
                             multiple={true}
                             accept="image/jpeg,image/jpg,image/png"
+                            required={true}
                           />
                         </FormControl>
                         <FormMessage />

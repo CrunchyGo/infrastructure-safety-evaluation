@@ -3,7 +3,7 @@ import { ImageUploader } from './ImageUploader';
 import { Button } from '@/components/ui/enhanced-button';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { Trash2, Home } from 'lucide-react';
-import { IMAGE_FIELDS, IMAGE_FIELD_LABELS } from '@/schemas/validation';
+import { IMAGE_FIELDS, IMAGE_FIELD_LABELS, REQUIRED_FIELDS } from '@/schemas/validation';
 import { Control, Controller } from 'react-hook-form';
 import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import type { HomeFormData } from '@/schemas/validation';
@@ -66,6 +66,7 @@ export const RoomForm: React.FC<RoomFormProps> = ({
                         files={formField.value}
                         onChange={formField.onChange}
                         multiple={true}
+                        required={REQUIRED_FIELDS.includes(field as any)}
                       />
                     </FormControl>
                     <FormMessage />
