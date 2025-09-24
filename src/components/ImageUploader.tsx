@@ -149,9 +149,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           <p className="text-sm font-medium text-foreground">
             {hasFiles ? `${fileCount} file${fileCount > 1 ? 's' : ''} selected` : 'Click to Add Images'}
           </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            {multiple ? 'JPG, PNG up to 5MB each' : 'JPG, PNG up to 10MB'}
-          </p>
         </div>
       </div>
 
