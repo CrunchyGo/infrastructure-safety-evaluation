@@ -36,6 +36,11 @@ const Home = () => {
     onSuccess: (data) => {
       toast.success('Inspection Submitted');
       form.reset();
+    },
+    onError: (error: any) => {
+      console.error('Form submission error:', error);
+      const errorMessage = error?.response?.data?.error || error?.message || 'Failed to submit inspection. Please try again.';
+      toast.error(errorMessage);
     }
   });
 
@@ -52,52 +57,81 @@ const Home = () => {
     remove(roomIndex);
   };
 
-  const onSubmit = (data: HomeFormData) => {
-    const formData = new FormData();
+  const onSubmit = async (data: HomeFormData) => {
+    try {
+      const formData = new FormData();
 
-    const ROOM_IMAGE_FIELDS = [
-      "interiorCeiling",
-      "interiorFrontWall",
-      "interiorRightWall",
-      "interiorBackWall",
-      "interiorLeftWall",
-      "interiorFloor",
-      "exteriorFrontWall",
-      "exteriorRightWall",
-      "exteriorLeftWall",
-      "exteriorBackWall",
-      "surroundingAreaOfBackwall",
-      "surroundingAreaOfLeftwall",
-      "surroundingAreaOfFrontwall",
-      "surroundingAreaOfRightwall",
-      "roof",
-    ];
+      const ROOM_IMAGE_FIELDS = [
+        "interiorCeiling",
+        "interiorFrontWall",
+        "interiorRightWall",
+        "interiorBackWall",
+        "interiorLeftWall",
+        "interiorFloor",
+        "exteriorFrontWall",
+        "exteriorRightWall",
+        "exteriorLeftWall",
+        "exteriorBackWall",
+        "surroundingAreaOfBackwall",
+        "surroundingAreaOfLeftwall",
+        "surroundingAreaOfFrontwall",
+        "surroundingAreaOfRightwall",
+        "roof",
+      ];
 
-    formData.append("schoolName", data.schoolName);
-    formData.append("state", data.state);
-    formData.append("district", data.district);
-    formData.append("block", data.block);
-    formData.append("udiseCode", user?.udiseCode || '');
+      // Validate required fields
+      if (!data.schoolName || !data.state || !data.district || !data.block) {
+        toast.error('Please fill in all required fields');
+        return;
+      }
 
-    // ✅ Single file
-    if (data.boardFile?.[0]) {
+      if (!user?.udiseCode) {
+        toast.error('User session expired. Please login again.');
+        router.push('/login');
+        return;
+      }
 
-      formData.append("boardFile", data.boardFile[0]);
-    }
+      formData.append("schoolName", data.schoolName);
+      formData.append("state", data.state);
+      formData.append("district", data.district);
+      formData.append("block", data.block);
+      formData.append("udiseCode", user.udiseCode);
 
-    data.rooms.forEach((room, i) => {
-      for (const field of ROOM_IMAGE_FIELDS) {
-        if (room[field] && room[field].length > 0) {
-          for (const file of room[field]) {
-            if (file) {
-              formData.append(`rooms[${i}][${field}]`, file);
+      // ✅ Single file with validation
+      if (data.boardFile?.[0]) {
+        const file = data.boardFile[0];
+        // Validate file size (10MB limit for mobile)
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error('Board file is too large. Please select a file smaller than 10MB.');
+          return;
+        }
+        formData.append("boardFile", file);
+      }
+
+      // Process room images with validation
+      data.rooms.forEach((room, i) => {
+        for (const field of ROOM_IMAGE_FIELDS) {
+          if (room[field] && room[field].length > 0) {
+            for (const file of room[field]) {
+              if (file) {
+                // Validate file size for each image (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                  toast.error(`Image ${field} is too large. Please select files smaller than 5MB each.`);
+                  return;
+                }
+                formData.append(`rooms[${i}][${field}]`, file);
+              }
             }
           }
         }
-      }
-    })
-    // 🚀 Send FormData
-    submitInspection(formData);
+      });
+
+      // 🚀 Send FormData
+      submitInspection(formData);
+    } catch (error) {
+      console.error('Form preparation error:', error);
+      toast.error('Failed to prepare form data. Please try again.');
+    }
   };
 
 

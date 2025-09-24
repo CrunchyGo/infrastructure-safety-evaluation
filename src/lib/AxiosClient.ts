@@ -19,6 +19,14 @@ axiosClient.interceptors.request.use(
       config.headers['User-Agent'] = 'NerdMine-WebApp/1.0';
     }
     
+    // Handle FormData for mobile compatibility
+    if (config.data instanceof FormData) {
+      // Don't set Content-Type header for FormData - let browser set it with boundary
+      delete config.headers['Content-Type'];
+      // Increase timeout for file uploads
+      config.timeout = 30 * 60 * 1000; // 30 minutes for large uploads
+    }
+    
     return config;
   },
   (error: AxiosError) => {

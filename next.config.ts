@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       config.devServer.client.overlay = false; // Disable error overlay
     }
     return config;
-  }
+  },
 };
 
 export default nextConfig;

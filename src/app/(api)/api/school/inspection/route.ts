@@ -113,9 +113,35 @@ export async function POST(req: Request) {
             });
 
             return NextResponse.json({ success: true, data: newForm }, { status: 201 });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error in POST /api/school/inspection:', error);
-            return NextResponse.json({ success: false, error: error }, { status: 400 });
+            
+            // Handle specific error types
+            if (error.name === 'ValidationError') {
+                return NextResponse.json(
+                    { success: false, error: 'Validation failed: ' + error.message },
+                    { status: 400 }
+                );
+            }
+            
+            if (error.code === 'LIMIT_FILE_SIZE') {
+                return NextResponse.json(
+                    { success: false, error: 'File too large. Please reduce file size and try again.' },
+                    { status: 413 }
+                );
+            }
+            
+            if (error.message?.includes('timeout')) {
+                return NextResponse.json(
+                    { success: false, error: 'Request timeout. Please try again with smaller files.' },
+                    { status: 408 }
+                );
+            }
+            
+            return NextResponse.json(
+                { success: false, error: 'Internal server error. Please try again.' },
+                { status: 500 }
+            );
         }
         // Parse multipart/form-data
     } catch (error: any) {

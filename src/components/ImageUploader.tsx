@@ -31,39 +31,63 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     const selectedFiles = e.target.files;
 
     if (selectedFiles && selectedFiles.length > 0) {
-      // Merge new files with existing files
-      const dt = new DataTransfer();
+      try {
+        // Validate file sizes for mobile compatibility
+        const maxFileSize = 5 * 1024 * 1024; // 5MB per file
+        const invalidFiles = Array.from(selectedFiles).filter(file => file.size > maxFileSize);
+        
+        if (invalidFiles.length > 0) {
+          alert(`Some files are too large. Please select files smaller than 5MB each.`);
+          e.target.value = '';
+          return;
+        }
 
-      // Add existing files first
-      if (files && files.length > 0) {
-        Array.from(files as FileList).forEach((file) => dt.items.add(file));
-      }
+        // Merge new files with existing files
+        const dt = new DataTransfer();
 
-      // Add new files
-      Array.from(selectedFiles as FileList).forEach((file) => dt.items.add(file));
+        // Add existing files first
+        if (files && files.length > 0) {
+          Array.from(files as FileList).forEach((file) => dt.items.add(file));
+        }
 
-      const mergedFiles = dt.files;
-      onChange(mergedFiles);
+        // Add new files
+        Array.from(selectedFiles as FileList).forEach((file) => dt.items.add(file));
 
-      // Update previews for all image files
-      const allFiles = Array.from(mergedFiles);
-      const imageFiles = allFiles.filter(file => file.type.startsWith('image/'));
+        const mergedFiles = dt.files;
+        onChange(mergedFiles);
 
-      if (imageFiles.length > 0) {
-        const newPreviews: string[] = [];
-        let loadedCount = 0;
+        // Update previews for all image files (with error handling)
+        const allFiles = Array.from(mergedFiles);
+        const imageFiles = allFiles.filter(file => file.type.startsWith('image/'));
 
-        imageFiles.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            newPreviews.push(e.target?.result as string);
-            loadedCount++;
-            if (loadedCount === imageFiles.length) {
-              setPreviews(newPreviews);
-            }
-          };
-          reader.readAsDataURL(file);
-        });
+        if (imageFiles.length > 0) {
+          const newPreviews: string[] = [];
+          let loadedCount = 0;
+
+          imageFiles.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              if (e.target?.result) {
+                newPreviews.push(e.target.result as string);
+              }
+              loadedCount++;
+              if (loadedCount === imageFiles.length) {
+                setPreviews(newPreviews);
+              }
+            };
+            reader.onerror = () => {
+              console.error('Error reading file:', file.name);
+              loadedCount++;
+              if (loadedCount === imageFiles.length) {
+                setPreviews(newPreviews);
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        }
+      } catch (error) {
+        console.error('Error handling file selection:', error);
+        alert('Error processing files. Please try again.');
       }
     }
 
