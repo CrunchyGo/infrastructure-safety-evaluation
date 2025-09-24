@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  // Vercel-specific optimizations
+  experimental: {
+    serverComponentsExternalPackages: ['mongoose'],
+  },
+  // Increase body size limit for file uploads
+  serverRuntimeConfig: {
+    maxFileSize: '400mb',
+  },
+  // Optimize for serverless
+  output: 'standalone',
 };
 
 export default nextConfig;

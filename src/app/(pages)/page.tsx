@@ -100,11 +100,7 @@ const Home = () => {
       // ✅ Single file with validation
       if (data.boardFile?.[0]) {
         const file = data.boardFile[0];
-        // Validate file size (10MB limit for mobile)
-        if (file.size > 10 * 1024 * 1024) {
-          toast.error('Board file is too large. Please select a file smaller than 10MB.');
-          return;
-        }
+
         formData.append("boardFile", file);
       }
 
@@ -114,11 +110,6 @@ const Home = () => {
           if (room[field] && room[field].length > 0) {
             for (const file of room[field]) {
               if (file) {
-                // Validate file size for each image (5MB limit)
-                if (file.size > 5 * 1024 * 1024) {
-                  toast.error(`Image ${field} is too large. Please select files smaller than 5MB each.`);
-                  return;
-                }
                 formData.append(`rooms[${i}][${field}]`, file);
               }
             }

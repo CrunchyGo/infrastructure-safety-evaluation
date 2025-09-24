@@ -13,18 +13,30 @@ const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_C
 const containerClient = blobServiceClient.getContainerClient(CONTAINER_NAME);
 
 /**
- * Uploads a file buffer to Azure Blob Storage.
+ * Uploads a file buffer to Azure Blob Storage with Vercel optimization.
  * @param fileBuffer - File data (Buffer/Uint8Array)
  * @param originalName - Original file name
  * @returns URL of the uploaded file
  */
 export const uploadToAzure = async (fileBuffer: Buffer, originalName: string): Promise<string> => {
-  const blobName = `${uuidv4()}-${originalName}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  try {
+    const blobName = `${uuidv4()}-${originalName}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  await blockBlobClient.uploadData(fileBuffer, {
-    blobHTTPHeaders: { blobContentType: "image/jpeg" }, // set mime type (can adjust later)
-  });
+    // Vercel-optimized upload with timeout
+    const uploadPromise = blockBlobClient.uploadData(fileBuffer, {
+      blobHTTPHeaders: { blobContentType: "image/jpeg" },
+    });
 
-  return blockBlobClient.url;
+    // Add timeout for Vercel serverless functions
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Azure upload timeout')), 30000); // 30 seconds
+    });
+
+    await Promise.race([uploadPromise, timeoutPromise]);
+    return blockBlobClient.url;
+  } catch (error) {
+    console.error('Azure upload error:', error);
+    throw new Error(`Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 };

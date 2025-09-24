@@ -5,10 +5,19 @@ import User from "@/app/(api)/model/User";
 import { connectDB } from "@/utils/db_connection";
 import { uploadToAzure } from "@/utils/azureUpload";
 
-export async function POST(req: Request) {
-    try {
-        try {
+// Vercel serverless function configuration
+export const config = {
+    maxDuration: 300, // 5 minutes for file uploads
+};
 
+export async function POST(req: Request): Promise<Response> {
+    try {
+        // Add timeout handling for Vercel
+        const timeoutPromise = new Promise<never>((_, reject) => {
+            setTimeout(() => reject(new Error('Request timeout')), 280000); // 4.5 minutes
+        });
+
+        const processPromise = async (): Promise<Response> => {
             const formData = await req.formData();
 
             // Extract simple fields
@@ -113,38 +122,47 @@ export async function POST(req: Request) {
             });
 
             return NextResponse.json({ success: true, data: newForm }, { status: 201 });
-        } catch (error: any) {
-            console.error('Error in POST /api/school/inspection:', error);
-            
-            // Handle specific error types
-            if (error.name === 'ValidationError') {
-                return NextResponse.json(
-                    { success: false, error: 'Validation failed: ' + error.message },
-                    { status: 400 }
-                );
-            }
-            
-            if (error.code === 'LIMIT_FILE_SIZE') {
-                return NextResponse.json(
-                    { success: false, error: 'File too large. Please reduce file size and try again.' },
-                    { status: 413 }
-                );
-            }
-            
-            if (error.message?.includes('timeout')) {
-                return NextResponse.json(
-                    { success: false, error: 'Request timeout. Please try again with smaller files.' },
-                    { status: 408 }
-                );
-            }
-            
+        };
+
+        // Race between processing and timeout
+        return await Promise.race([processPromise(), timeoutPromise]);
+
+    } catch (error: any) {
+        console.error('Error in POST /api/school/inspection:', error);
+        
+        // Handle specific error types
+        if (error.name === 'ValidationError') {
             return NextResponse.json(
-                { success: false, error: 'Internal server error. Please try again.' },
-                { status: 500 }
+                { success: false, error: 'Validation failed: ' + error.message },
+                { status: 400 }
             );
         }
-        // Parse multipart/form-data
-    } catch (error: any) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+        
+        if (error.code === 'LIMIT_FILE_SIZE') {
+            return NextResponse.json(
+                { success: false, error: 'File too large. Please reduce file size and try again.' },
+                { status: 413 }
+            );
+        }
+        
+        if (error.message?.includes('timeout') || error.message?.includes('Request timeout')) {
+            return NextResponse.json(
+                { success: false, error: 'Request timeout. Please try again with smaller files.' },
+                { status: 408 }
+            );
+        }
+        
+        // Vercel-specific error handling
+        if (error.message?.includes('Function execution timed out')) {
+            return NextResponse.json(
+                { success: false, error: 'Server timeout. Please try again with fewer files.' },
+                { status: 408 }
+            );
+        }
+        
+        return NextResponse.json(
+            { success: false, error: 'Internal server error. Please try again.' },
+            { status: 500 }
+        );
     }
 }

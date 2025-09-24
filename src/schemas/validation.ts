@@ -17,42 +17,15 @@ export const LoginSchema = yup.object({
 const fileValidation = yup
   .mixed()
   .required('This field is required')
-  .test('fileSize', 'File size must be less than 5MB', (value: any) => {
-    if (!value || !value.length) return false;
-    return Array.from(value).every((file: any) => file.size <= 5242880); // 5MB
-  })
-  .test('fileType', 'Only JPG, PNG files are allowed', (value: any) => {
-    if (!value || !value.length) return false;
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    return Array.from(value).every((file: any) => allowedTypes.includes(file.type));
-  });
 
 // Optional file validation helper for exterior fields
 const optionalFileValidation = yup
   .mixed()
-  .test('fileSize', 'File size must be less than 5MB', (value: any) => {
-    if (!value || !value.length) return true; // Allow empty
-    return Array.from(value).every((file: any) => file.size <= 5242880); // 5MB
-  })
-  .test('fileType', 'Only JPG, PNG files are allowed', (value: any) => {
-    if (!value || !value.length) return true; // Allow empty
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    return Array.from(value).every((file: any) => allowedTypes.includes(file.type));
-  });
 
 // Single file validation for board document
 const singleFileValidation = yup
   .mixed()
   .required('Board document is required')
-  .test('fileSize', 'File size must be less than 10MB', (value: any) => {
-    if (!value || !value.length) return false;
-    return value[0]?.size <= 10485760; // 10MB
-  })
-  .test('fileType', 'Only JPG, PNG files are allowed', (value: any) => {
-    if (!value || !value.length) return false;
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    return allowedTypes.includes(value[0]?.type);
-  });
 
 // Interior room image fields (required)
 const interiorImageFields = [
